@@ -1,0 +1,19 @@
+{
+  "item": {
+    "1": {
+      "id": 1,
+      "name": "Finomliszt",
+      "quantity": 70
+    },
+    "2": {
+      "id": 2,
+      "name": "Kristálycukor",
+      "quantity": 50
+    },
+    "3": {
+      "id": 3,
+      "name": "Háztartási só",
+      "quantity": 40
+    }
+  }
+}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Szakdoga</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/idbwrapper/1.7.1/idbstore.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.6.5/firebase.js"></script>
+    <script defer src="items.js"></script>
+    <script defer src="globals.js"></script>
+</head>
+
+<body>
+    <div class="btn-group-vertical">
+        <button href="#listItems" data-toggle="tab" type="button" class="btn btn-primary" id="listItemsToggle">Termékek kilistázása</button>
+        <button href="#createItem" data-toggle="tab" type="button" class="btn btn-primary" id="itemsCreate">Termékek létrehozása</button>
+    </div>
+
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane fade in active" id="home">Főoldal</div>
+        <div role="tabpanel" class="tab-pane fade" id="listItems">Termékek kilistázása
+            <table class="table" id="itemsMainTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Név</th>
+                        <th>Mennyiség</th>
+                    </tr>
+                </thead>
+                <tbody id="itemsTable">
+                </tbody>
+            </table>
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="createItem">Termék létrehozása
+            <form id="itemCreateForm">
+                <div class="form-group">
+                    <label for="itemName">Termék neve:</label>
+                    <input type="text" class="form-control col-sm-6" id="itemName">
+                </div>
+                <div class="form-group">
+                    <label for="itemQuantity">Mennyiség:</label>
+                    <input type="number" class="form-control col-sm-6" id="itemQuantity">
+                </div>
+                <br>
+                <button type="button" class="btn btn-primary" id="saveNewItem">Mentés</button>
+                <button type="button" class="btn btn-primary" id="dropItem">Elvetés</button>
+            </form>
+        </div>
+</body>
+
+</html>
