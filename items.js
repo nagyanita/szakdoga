@@ -14,8 +14,8 @@ $('#saveNewItem').on('click', function saveNewItemCallBack() {
     var itemName = $('#itemName').val(),
         itemQuantity = Number($('#itemQuantity').val());
 
-    createElem('items', {
-        _id: String(itemAutoIncrement++),
+    firebase.database().ref().child('item').push({
+        id: String(itemAutoIncrement++),
         name: itemName,
         quantity: itemQuantity
     });
@@ -27,29 +27,17 @@ $('#saveNewItem').on('click', function saveNewItemCallBack() {
 $('#listItemsToggle').on('show.bs.tab', function listItemsToggleCallBack() {
     var elem = document.createElement('tbody');
 
-    _.each(cols.items, function eachItem(item) {
-        $(elem).append(`
-                      <tr id="rowId${item._id}">
-                          <td>${item._id}</td>
-                          <td>${item.name}</td>
-                          <td>${item.quantity}</td>
-                      </tr>`);
-
-        $('#itemsTable').replaceWith(elem);
-        elem.setAttribute('id', 'itemsTable');
-
-        var database = firebase.database();
-
-        var items = database.ref('item');
-        items.on('value', function (snapshot) {
-            var snap = snapshot.val();
-            snap.forEach(function (childSnapshot) {
-                $(`#${childSnapshot.id}`).replaceWith(`<tr id="rowId${childSnapshot._id}">
-                         <td>${childSnapshot._id}</td>
-                         <td>${childSnapshot.name}</td>
-                         <td>${childSnapshot.quantity}</td>
-                     </tr>`);
-            });
+    $('#itemsTable').empty();
+    var items = database.ref('item');
+    items.on('value', function (snapshot) {
+        var snap = snapshot.val();
+        snap.forEach(function (childSnapshot) {
+            $('#itemsTable').append(`
+            <tr id="rowId${childSnapshot._id}">
+                <td>${childSnapshot.id}</td>
+                <td>${childSnapshot.name}</td>
+                <td>${childSnapshot.quantity}</td>
+            </tr>`);
         });
     });
 });
