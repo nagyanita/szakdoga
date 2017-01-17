@@ -9,35 +9,25 @@ firebase.initializeApp(config);
 
 var database = firebase.database();
 
-/*Cikkek tárolása*/
-$('#saveNewItem').on('click', function saveNewItemCallBack() {
-    var itemName = $('#itemName').val(),
-        itemQuantity = Number($('#itemQuantity').val());
-
-    firebase.database().ref().child('item').push({
-        id: String(itemAutoIncrement++),
-        name: itemName,
-        quantity: itemQuantity
-    });
-
-    document.getElementById('itemCreateForm').reset();
-});
-
-/*Termékek kilistázása */
-$('#listItemsToggle').on('show.bs.tab', function listItemsToggleCallBack() {
-    var elem = document.createElement('tbody');
-
-    $('#itemsTable').empty();
-    var items = database.ref('item');
-    items.on('value', function (snapshot) {
-        var snap = snapshot.val();
-        snap.forEach(function (childSnapshot) {
-            $('#itemsTable').append(`
-            <tr id="rowId${childSnapshot._id}">
-                <td>${childSnapshot.id}</td>
-                <td>${childSnapshot.name}</td>
-                <td>${childSnapshot.quantity}</td>
-            </tr>`);
-        });
-    });
+var vm = new Vue({
+    el: '#app',
+    data: {
+        item: {
+            name: '',
+            quantity: 1
+        }
+    },
+    firebase: {
+        items: database.ref('items')
+    },
+    methods: {
+        save: function () {
+            this.$firebaseRefs.items.push(this.item);
+            this.drop();
+        },
+        drop: function () {
+            this.item.name = '';
+            this.item.quantity = 1;
+        }
+    }
 });
