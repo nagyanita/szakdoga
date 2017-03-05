@@ -1,4 +1,9 @@
 body {
     background-image: url("background.jpg");
+    color: white;
+}
+
+#myModal, #deleteItems {
+    color: black;   
 }
 

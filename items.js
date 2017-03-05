@@ -55,10 +55,14 @@ var vm = new Vue({
             database.ref(`items/${this.editItemForm['.key']}`).set(item);
         },
         deleteItem: function (item) {
-            database.ref(`items/${item['.key']}`).remove().then(function () {
-                console.log('Remove succeeded.');
-            }).catch(function (error) {
-                console.log('Remove failed:' + error.message);
+            $('#deleteItems').modal('show');
+            $('#yesDelete').one('click', function yesDeleteCallBack() {
+                database.ref(`items/${item['.key']}`).remove().then(function () {
+                    console.log('Remove succeeded.');
+                     $('#deleteItems').modal('hide');
+                }).catch(function (error) {
+                    console.log('Remove failed:' + error.message);
+                });
             });
         },
         sortByQuantity: function () {
