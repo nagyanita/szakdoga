@@ -25,10 +25,16 @@ var vm = new Vue({
         },
         itemFilter: '',
         barcodeFilter: '',
-        sortFilter: 0
+        sortFilter: 0,
+        options: [
+            { text: 'kg', value: 'kg' },
+            { text: 'db', value: 'db' },
+            { text: 'liter', value: 'liter' }
+        ]
     },
     firebase: {
-        items: database.ref('items')
+        items: database.ref('items'),
+        shoppingLists: database.ref('shoppingLists'),
     },
     methods: {
         save: function () {
@@ -46,6 +52,31 @@ var vm = new Vue({
             this.editItemForm.quantity = item.quantity;
             this.editItemForm.barcode = item.barcode;
         },
+        refreshList: function (item) {
+            var freshItem = {};
+
+            freshItem.name = item.name;
+            freshItem.quantity = item.quantity;
+            freshItem.units = item.units;
+
+            database.ref(`shoppingLists/${item['.key']}`).set(freshItem);
+        },
+        deleteShoppingItem: function (item) {
+            $('#deleteItems').modal('show');
+            $('#yesDelete').one('click', function yesDeleteCallBack() {
+                database.ref(`shoppingLists/${item['.key']}`).remove().then(function () {
+                    console.log('Remove succeeded.');
+                    $('#deleteItems').modal('hide');
+                }).catch(function (error) {
+                    console.log('Remove failed:' + error.message);
+                });
+            });
+        },
+        getItem: function (item) {
+            var shoppingItem = { name: item.name };
+
+            this.$firebaseRefs.shoppingLists.push(shoppingItem);
+        },
         saveEditedItem() {
             var item = {};
 
@@ -59,7 +90,7 @@ var vm = new Vue({
             $('#yesDelete').one('click', function yesDeleteCallBack() {
                 database.ref(`items/${item['.key']}`).remove().then(function () {
                     console.log('Remove succeeded.');
-                     $('#deleteItems').modal('hide');
+                    $('#deleteItems').modal('hide');
                 }).catch(function (error) {
                     console.log('Remove failed:' + error.message);
                 });
@@ -88,6 +119,11 @@ var vm = new Vue({
                 result = _.sortBy(result, 'quantity').reverse();
             }
             return result;
+        },
+        filteredShoppingItems: function () {
+            var result = _.filter(this.shoppingLists, (elem) => {
+                return elem.name;
+            });
         }
     },
     components: {
@@ -123,3 +159,4 @@ var vm = new Vue({
         }
     }
 });
+

@@ -17,7 +17,7 @@ $('.dropdown-menu li').on('click', function menuClickCallBack(e) {
 });
 
 $(document).ready(function () {
-    $('#myModal').modal('show');
+  //  $('#myModal').modal('show');
 });
 
 //provider.addScope('https://www.googleapis.com/auth/plus.login');

@@ -7,3 +7,22 @@ body {
     color: black;   
 }
 
+.searchInputs {
+    color: black;   
+}
+
+.input-group {
+    color: black;   
+}
+
+.itemQuantity {
+    border: black solid;
+    border-radius: 5px;
+    background: lightblue;
+    color: red;
+    font-weight: bold;
+}
+
+.unitsSelect {
+    color: black;
+}

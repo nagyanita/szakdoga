@@ -76,7 +76,7 @@
         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
             <li><a href="#listItems" data-toggle="tab" id="listItemsToggle">Otthoni készlet</a></li>
             <li><a href="#createItem" data-toggle="tab" id="itemsCreate">Új termék</a></li>
-            <li><a href="#">Megjegyzések</a></li>
+            <li><a href="#listShoppingItems" data-toggle="tab" id="listShoppingItemsToggle">Bevásárló lista</a></li>
             <li role="separator" class="divider"></li>
             <li><a href="#">Kijelentkezés</a></li>
         </ul>
@@ -86,15 +86,16 @@
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane fade in active" id="home">Főoldal</div>
             <div role="tabpanel" class="tab-pane fade" id="listItems">Termékek kilistázása
-                <div><input type="search" placeholder="Keresés név alapján..." v-model="itemFilter">
+                <div class="searchInputs"><input type="search" placeholder="Keresés név alapján..." v-model="itemFilter">
                     <input type="search" placeholder="Keresés vonalkód alapján..." v-model="barcodeFilter"></div>
                 <table class="table" id="itemsMainTable">
                     <thead>
                         <tr>
                             <th width="15%">Név</th>
-                            <th width="20%">Db
+                            <th width="10%">Menny.
                                 <span class="glyphicon" v-on:click="sortByQuantity()" v-bind:class="{ 'glyphicon-sort': sortFilter === 0, 'glyphicon-sort-by-order': sortFilter === 1, 'glyphicon-sort-by-order-alt': sortFilter === 2 }"
                                     aria-hidden="true"></span></th>
+                            <th width="10%"></th>
                             <th width="25%">Vonalkód</th>
                             <th width="10%"></th>
                             <th width="10%"></th>
@@ -104,6 +105,7 @@
                         <tr>
                             <td> {{ it.name }} </td>
                             <td> {{ it.quantity }} </td>
+                            <td> {{ it.units }} </td>
                             <td> {{ it.barcode }}</td>
                             <td> <button href="#editItem" data-toggle="tab" type="button" class="btn btn-default" v-on:click="editItem(it)">
                                  <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
@@ -111,6 +113,9 @@
                             <td> <button href="#deleteItem" data-toggle="tab" type="button" class="btn btn-default" v-on:click="deleteItem(it)">
                                  <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                  </button></td>
+                            <td> <button href="" data-toggle="tab" type="button" class="btn btn-default" v-on:click="getItem(it)">
+                                 <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
+                                 </button>
                         </tr>
                     </tbody>
                 </table>
@@ -123,6 +128,14 @@
                     </div>
                     <input-number v-model.number="item.quantity"></input-number>
                     <input-barcode v-model="item.barcode"></input-barcode>
+                    <div class="form-group">
+                        <label for="itemQuantity">Mértékegység:</label>
+                        <select class="form-control unitsSelect" v-model="item.units">
+                                    <option v-for="option in options" v-bind:value="option.value">
+                                        {{ option.text }}
+                                    </option>
+                            </select>
+                    </div>
                     <br>
                     <button type="button" class="btn btn-primary" v-on:click="save">Mentés</button>
                     <button type="button" class="btn btn-primary" v-on:click="drop">Elvetés</button>
@@ -144,8 +157,38 @@
                     </div>
                     <br>
                     <button href="#listItems" data-toggle="tab" type="button" class="btn btn-primary" v-on:click="saveEditedItem">Mentés</button>
-                    <button type="button" class="btn btn-primary">Elvetés</button>
+                    <button href="#listItems" data-toggle="tab" type="button" class="btn btn-primary">Elvetés</button>
                 </form>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="listShoppingItems">Bevásárló lista
+                <table class="table" id="itemsMainTable">
+                    <thead>
+                        <tr>
+                            <th width="15%">Név</th>
+                            <th width="20%">Db</th>
+                            <th width="10%">Mértékegység</th>
+                            <th width="10%"></th>
+                            <th width="10%"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="shoppingItemsTable" v-for="it in shoppingLists">
+                        <tr>
+                            <td> {{ it.name }} </td>
+                            <td><input class="searchInputs" type="number" v-model="it.quantity"> </td>
+                            <td><select class="form-control unitsSelect" v-model="it.units">
+                                    <option v-for="option in options" v-bind:value="option.value">
+                                        {{ option.text }}
+                                    </option>
+                            </select></td>
+                            <td> <button type="button" class="btn btn-default" v-on:click="refreshList(it)">
+                                 <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                                 </button></td>
+                            <td> <button href="#deleteItem" data-toggle="tab" type="button" class="btn btn-default" v-on:click="deleteShoppingItem(it)">
+                                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                 </button></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
