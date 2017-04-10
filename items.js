@@ -15,13 +15,15 @@ var vm = new Vue({
         item: {
             name: '',
             quantity: 1,
-            barcode: ''
+            barcode: '',
+            units: '',
         },
         editItemForm: {
             '.key': '',
             name: '',
             quantity: 1,
-            barcode: ''
+            barcode: '',
+            units: '',
         },
         itemFilter: '',
         barcodeFilter: '',
@@ -29,7 +31,8 @@ var vm = new Vue({
         options: [
             { text: 'kg', value: 'kg' },
             { text: 'db', value: 'db' },
-            { text: 'liter', value: 'liter' }
+            { text: 'liter', value: 'liter' },
+            { text: 'csomag', value: 'csomag' }
         ]
     },
     firebase: {
@@ -45,10 +48,12 @@ var vm = new Vue({
             this.item.name = '';
             this.item.quantity = 1;
             this.item.barcode = '';
+            this.item.units = '';
         },
         editItem: function (item) {
             this.editItemForm['.key'] = item['.key'];
             this.editItemForm.name = item.name;
+            this.editItemForm.units = item.units;
             this.editItemForm.quantity = item.quantity;
             this.editItemForm.barcode = item.barcode;
         },
@@ -83,6 +88,7 @@ var vm = new Vue({
             item.name = this.editItemForm.name;
             item.quantity = this.editItemForm.quantity;
             item.barcode = this.editItemForm.barcode;
+            item.units = this.editItemForm.units;
             database.ref(`items/${this.editItemForm['.key']}`).set(item);
         },
         deleteItem: function (item) {
@@ -101,7 +107,7 @@ var vm = new Vue({
             if (this.sortFilter === 3) {
                 this.sortFilter = 0;
             }
-        }
+        },
     },
     computed: {
         filtereditems: function () {
@@ -154,9 +160,34 @@ var vm = new Vue({
                         elem.value = elem.value.substring(0, 13);
                     }
                     this.$emit('input', elem.value);
-                }
-            }
-        }
-    }
+                },
+                 barcodeScanner(elem) {
+                    cordova.plugins.barcodeScanner.scan(
+                        function (result) {
+                                alert("We got a barcode\n" +
+                                "Result: " + result.text + "\n" +
+                                "Format: " + result.format + "\n" +
+                                "Cancelled: " + result.cancelled);
+                        
+                        },
+                        function (error) {
+                          alert("Scanning failed: " + error);
+                        },
+                    {
+                      preferFrontCamera : false, // iOS and Android
+                      showFlipCameraButton : true, // iOS and Android
+                      showTorchButton : true, // iOS and Android
+                      torchOn: true, // Android, launch with the torch switched on (if available)
+                      prompt : "Place a barcode inside the scan area", // Android
+                      resultDisplayDuration: 500, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
+                      formats : "BAR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
+                      orientation : "landscape", // Android only (portrait|landscape), default unset so it rotates with the device
+                      disableAnimations : true, // iOS
+                      disableSuccessBeep: false // iOS
+                    }
+                    );
+                },
+            },
+        },
+    },
 });
-
