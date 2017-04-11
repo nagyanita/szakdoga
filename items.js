@@ -162,12 +162,14 @@ var vm = new Vue({
                     this.$emit('input', elem.value);
                 },
                  barcodeScanner(elem) {
+                    var that = this;
                     cordova.plugins.barcodeScanner.scan(
                         function (result) {
                                 alert("We got a barcode\n" +
                                 "Result: " + result.text + "\n" +
                                 "Format: " + result.format + "\n" +
                                 "Cancelled: " + result.cancelled);
+                                that.$emit('input', result.text);
                         
                         },
                         function (error) {
