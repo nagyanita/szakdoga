@@ -52,14 +52,6 @@ var vm = new Vue({
         items: database.ref('items'),
         shoppingLists: database.ref('shoppingLists'),
     },
-    mounted() {
-        var currentdate = new Date();
-        var datetime = currentdate.getFullYear() + ".06." + currentdate.getDate();
-        // console.log(datetime);
-        _.filter(this.$firebaseRefs.items, elem => console.log(elem));
-        // console.log(_.filter(firebase.items, elem => elem.start > datetime));
-        // console.log(datetime - '1991.03.31');
-    },
     methods: {
         save: function () {
             this.$firebaseRefs.items.push(this.item);
